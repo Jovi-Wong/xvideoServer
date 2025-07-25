@@ -2,6 +2,7 @@ import { WebSocketServer } from "ws";
 import dotenv from "dotenv";
 
 import generateText from "./generator/generateText.js";
+import generateImage from "./generator/generateImage.js";
 import generateVideo from "./generator/generateVideo.js";
 
 dotenv.config();
@@ -33,26 +34,30 @@ wss.on("connection", (ws, req) => {
           case "generateText":
             await generateText("请介绍一下你自己", true, ws);
             break;
+          case "generateImage":
+            const imageURL = await generateImage("生成一张可爱的猫咪图片");
+            ws.send(
+              JSON.stringify({
+                action: "generateImage",
+                url: imageURL,
+              })
+            );
+            break;
           case "generateVideo":
             await generateVideo("制作一个狸花猫在海边吃鱼的视频", ws);
             break;
-          // default:
-          //   ws.send(
-          //     JSON.stringify({
-          //       type: "echo",
-          //       message: message?.choices[0]?.delta?.content || "",
-          //     })
-          //   );
-          //   break;
+          default:
+            ws.send(
+              JSON.stringify({
+                action: "echo",
+                message: "hello world"
+              })
+            );
         }
       }
     } catch (error) {
-      ws.send(
-        JSON.stringify({
-          type: "error",
-          message: "Invalid message format",
-        })
-      );
+      console.log("Error processing message:", error);
+      ws.send(JSON.stringify(error));
     }
   });
 
