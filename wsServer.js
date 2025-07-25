@@ -2,6 +2,7 @@ import { WebSocketServer } from "ws";
 import dotenv from "dotenv";
 
 import generateText from "./generator/generateText.js";
+import generateVideo from "./generator/generateVideo.js";
 
 dotenv.config();
 
@@ -31,6 +32,9 @@ wss.on("connection", (ws, req) => {
         switch (message.action) {
           case "generateText":
             await generateText("请介绍一下你自己", true, ws);
+            break;
+          case "generateVideo":
+            await generateVideo("制作一个狸花猫在海边吃鱼的视频", ws);
             break;
           // default:
           //   ws.send(
