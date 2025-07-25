@@ -1,11 +1,9 @@
 import { WebSocketServer } from "ws";
-import dotenv from "dotenv";
-
 import generateText from "./generator/generateText.js";
+import generateAudio from "./generator/generateAudio.js";
 import generateImage from "./generator/generateImage.js";
 import generateVideo from "./generator/generateVideo.js";
 
-dotenv.config();
 
 const PORT = 8080;
 
@@ -16,13 +14,6 @@ const wss = new WebSocketServer({ port: PORT });
 wss.on("connection", (ws, req) => {
   console.log("New client connected from:", req.socket.remoteAddress);
 
-  // Send welcome message to new client
-  // ws.send(
-  //   JSON.stringify({
-  //     type: "welcome",
-  //     message: "Connected to WebSocket server",
-  //   })
-  // );
 
   // Handle incoming messages
   ws.on("message", async (data) => {
@@ -33,6 +24,9 @@ wss.on("connection", (ws, req) => {
         switch (message.action) {
           case "generateText":
             await generateText("请介绍一下你自己", true, ws);
+            break;
+          case "generateAudio":
+            await generateAudio("请介绍一下你自己");
             break;
           case "generateImage":
             const imageURL = await generateImage("生成一张可爱的猫咪图片");
@@ -50,7 +44,7 @@ wss.on("connection", (ws, req) => {
             ws.send(
               JSON.stringify({
                 action: "echo",
-                message: "hello world"
+                message: "hello world",
               })
             );
         }
