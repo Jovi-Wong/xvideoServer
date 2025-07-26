@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import openAI from "openai";
 import OSS from "ali-oss";
-import path from "path";
 
 dotenv.config();
 

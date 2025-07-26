@@ -3,6 +3,7 @@ import generateText from "./generator/generateText.js";
 import generateAudio from "./generator/generateAudio.js";
 import generateImage from "./generator/generateImage.js";
 import generateVideo from "./generator/generateVideo.js";
+import removeImageBackground from "./generator/removeImageBackground.js";
 
 const PORT = 8080;
 
@@ -38,6 +39,16 @@ wss.on("connection", (ws, req) => {
             break;
           case "generateVideo":
             await generateVideo("制作一个狸花猫在海边吃鱼的视频", ws);
+            break;
+          case "removeImageBackground":
+            const imageUrl = message.imageUrl || "http://viapi-test.oss-cn-shanghai.aliyuncs.com/viapi-3.0domepic/imageseg/SegmentCommonImage/SegmentCommonImage1.jpg";
+            const result = await removeImageBackground(imageUrl);
+            ws.send(
+              JSON.stringify({
+                action: "removeImageBackground",
+                data: result,
+              })
+            );
             break;
           default:
             ws.send(

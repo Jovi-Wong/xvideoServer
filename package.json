@@ -2,6 +2,9 @@
   "name": "xvideo-server",
   "type": "module",
   "dependencies": {
+    "@alicloud/imageseg20191230": "^3.0.1",
+    "@alicloud/openapi-client": "^0.4.15",
+    "@alicloud/tea-util": "^1.4.10",
     "ali-oss": "^6.23.0",
     "axios": "^1.11.0",
     "dotenv": "^17.2.0",
