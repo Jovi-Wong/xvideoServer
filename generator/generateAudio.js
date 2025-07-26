@@ -39,7 +39,7 @@ export default function generateAudio(text) {
 
       console.log("Audio generation response:", response.data);
       // Check if response has data and audio
-      if (response.data && response.data.data && response.data.data.audio) {
+      if (response?.data?.data?.audio) {
         console.log("Audio data received, processing...");
         const hexAudio = response.data.data.audio;
         const audioBuffer = Buffer.from(hexAudio, 'hex');

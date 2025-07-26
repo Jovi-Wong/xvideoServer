@@ -1,8 +1,18 @@
 import openAI from "openai";
+import OSS from "ali-oss";
+import path from "path";
+
+const ossClient = new OSS({
+  region: "oss-cn-hangzhou",
+  accessKeyId: process.env.ALIYUN_ACCESS_KEY_ID,
+  accessKeySecret: process.env.ALIYUN_ACCESS_KEY_SECRET,
+  authorizationV4: true,
+  bucket: "asset-viralvideo-cn",
+});
 
 const arkClient = new openAI({
   apiKey: process.env.ARK_API_KEY,
-  baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
+  baseURL: "https://ark.cn-beijing.volces.com/api/v3",
 });
 
 export default function generateImage(text) {
@@ -16,7 +26,27 @@ export default function generateImage(text) {
         size: "720x1280",
         response_format: "url",
       });
-      resolve(response.data[0].url);
+
+      // Download image from the generated URL
+      const imageUrl = response.data[0].url;
+      const imageResponse = await fetch(imageUrl);
+      const imageBuffer = await imageResponse.arrayBuffer();
+      
+      // Generate unique filename
+      const timestamp = Date.now();
+      const filename = `generated-image-${timestamp}.jpeg`;
+
+      const result = await ossClient.put(
+        filename,
+        Buffer.from(imageBuffer),
+        {
+          "x-oss-storage-class": "Standard",
+          "x-oss-object-acl": "public-read",
+          "x-oss-tagging": "project=xvideo&stage=dev",
+          "x-oss-forbid-overwrite": "false",
+        }
+      );
+      resolve(result.url);
     } catch (error) {
       reject(error);
     }
