@@ -4,7 +4,6 @@ import generateAudio from "./generator/generateAudio.js";
 import generateImage from "./generator/generateImage.js";
 import generateVideo from "./generator/generateVideo.js";
 
-
 const PORT = 8080;
 
 // Create WebSocket server

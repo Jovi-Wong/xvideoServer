@@ -1,6 +1,9 @@
+import dotenv from "dotenv";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
+
+dotenv.config();
 
 export default function generateAudio(text) {
   return new Promise(async (resolve, reject) => {

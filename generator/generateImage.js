@@ -1,6 +1,9 @@
+import dotenv from "dotenv";
 import openAI from "openai";
 import OSS from "ali-oss";
 import path from "path";
+
+dotenv.config();
 
 const ossClient = new OSS({
   region: "oss-cn-hangzhou",
